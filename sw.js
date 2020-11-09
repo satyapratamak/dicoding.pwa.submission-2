@@ -3,6 +3,7 @@ const CACHE_NAME = "dicoding-pwa-subm2-v1";
 var urlsToCache = [
     "/",    
     "/index.html",
+    "full_table.html",
     "/pages/dashboard.html",
     "/pages/table.html",
     "/assets/img/logo.jpg",

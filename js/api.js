@@ -31,7 +31,7 @@ const error = (error) => {
 }
 
 
-// Blok kode untuk melakukan request data json
+/*// Blok kode untuk melakukan request data json
 const getBundesligaStandings = () => {
   
     fetch(urlBundesligaStandings, {
@@ -63,7 +63,7 @@ const getBundesligaStandings = () => {
                                   <p>Lost = ${lost}</p>
                               </div>
                               <div class="card-action">
-                                <a href="#">Full Bundesliga Table</a>                        
+                                <a href="./full_table.html?id=2002">Full Bundesliga Table</a>                        
                               </div> `;              
               document.getElementById("articles").appendChild(card);                          
           }
@@ -106,7 +106,7 @@ const getEredivisieStandings = () => {
                               <p>Lost = ${lost}</p>
                             </div>
                             <div class="card-action">
-                              <a href="#">Full Eredivisie Table</a>                        
+                            <a href="./full_table.html?id=2003">Full Eredivisie Table</a>                        
                             </div>`;
             
           document.getElementById("articles").appendChild(card); 
@@ -116,9 +116,9 @@ const getEredivisieStandings = () => {
     })
     .catch(error);
 }
-
+*/
 // Blok kode untuk melakukan request data json
-const getEPLStandings = () => {
+const getTopEPLStandings = () => {
   fetch(urlEPLStandings, {
       headers: {
           'X-Auth-Token' : '0e42cd9c1953405f81134678fb75b5dd'
@@ -150,7 +150,7 @@ const getEPLStandings = () => {
                               <p>Lost = ${lost}</p>
                             </div>
                             <div class="card-action">
-                              <a href="#">Full EPL Table</a>                        
+                            <a href="./full_table.html?id=2021">Full EPL Table</a>                        
                             </div>`;
             
           document.getElementById("articles").appendChild(card); 
@@ -162,7 +162,7 @@ const getEPLStandings = () => {
 }
 
 // Blok kode untuk melakukan request data json
-const getLaLigaStandings = () => {
+const getTopLaLigaStandings = () => {
   fetch(urlLaLigaStandings, {
       headers: {
           'X-Auth-Token' : '0e42cd9c1953405f81134678fb75b5dd'
@@ -194,7 +194,7 @@ const getLaLigaStandings = () => {
                               <p>Lost = ${lost}</p>
                             </div>
                             <div class="card-action">
-                              <a href="#">Full LaLiga Table</a>                        
+                            <a href="./full_table.html?id=2014">Full LaLiga Table</a>                        
                             </div>`;
             
           document.getElementById("articles").appendChild(card); 
@@ -205,6 +205,7 @@ const getLaLigaStandings = () => {
     .catch(error);
 }
 
+/*
 // Blok kode untuk melakukan request data json
 const getLigue1Standings = () => {
   fetch(urlLigue1Standings, {
@@ -238,7 +239,7 @@ const getLigue1Standings = () => {
                               <p>Lost = ${lost}</p>
                             </div>
                             <div class="card-action">
-                              <a href="#">Full LaLiga Table</a>                        
+                            <a href="./full_table.html?id=2015">Full League1 Table</a>                        
                             </div>`;
             
           document.getElementById("articles").appendChild(card); 
@@ -248,15 +249,171 @@ const getLigue1Standings = () => {
     })
     .catch(error);
 }
+*/
 
-
-const getAllLeaguesStandings = async () => {
+const getAllTopLeaguesStandings = () => {
   
-  getBundesligaStandings();
-  getEredivisieStandings();
-  getEPLStandings();
-  getLaLigaStandings();
-  getLigue1Standings();
+  //getBundesligaStandings();
+  //getEredivisieStandings();
+  getTopEPLStandings();
+  getTopLaLigaStandings();
+  //getLigue1Standings();
 
 
-} 
+}
+
+const getEPLStandings = () => {
+
+  fetch(urlEPLStandings, {
+    headers: {
+        'X-Auth-Token' : '0e42cd9c1953405f81134678fb75b5dd'
+    }
+  })
+  .then(status)
+  .then(json)
+  .then( (data) => {
+    // Objek/array JavaScript dari response.json() masuk lewat data.
+    // Menyusun komponen card artikel secara dinamis
+    const obj1 = data["standings"][0];
+
+    
+    let i = 0;
+    var full_table_HTML = `<h3>EPL Table </h3>
+                            <br>
+                            <table class="responsive-table centered">
+                              <thead>
+                                <tr>
+                                  <th>Position</th>
+                                  <th>Club Name</th>
+                                  <th>Played Games</th>
+                                  <th>Win</th>
+                                  <th>Draw</th>
+                                  <th>Lost</th>
+                                  <th>Point/s</th>
+                                </tr>
+                              </thead>
+                              <tbody>`;
+    for (let iter_1 in obj1){
+      if ( i == 3){
+
+        for(var j = 0; j < obj1[iter_1].length ; j++){
+
+          const name = obj1[iter_1][j]["team"]["name"];
+          const points = obj1[iter_1][j]["points"];
+          const playedGames = obj1[iter_1][j]["playedGames"];
+          const won = obj1[iter_1][j]["won"];
+          const draw = obj1[iter_1][j]["draw"];
+          const lost = obj1[iter_1][j]["lost"];
+
+          full_table_HTML += `<tr>
+                                <td>${j+1}</td>
+                                <td>${name}</td>
+                                <td>${playedGames}</td>
+                                <td>${won}</td>
+                                <td>${draw}</td>
+                                <td>${lost}</td>
+                                <td>${points}</td>
+                                
+                              </tr>`;
+        }
+        
+      }
+      
+      i++;
+    }
+    
+    full_table_HTML += `</tbody>    
+                      </table>`;
+
+    document.getElementById("body-content").innerHTML = full_table_HTML; 
+  })
+  .catch(error);
+}
+
+const getLaLigaStandings = () => {
+
+  fetch(urlLaLigaStandings, {
+    headers: {
+        'X-Auth-Token' : '0e42cd9c1953405f81134678fb75b5dd'
+    }
+  })
+  .then(status)
+  .then(json)
+  .then( (data) => {
+    // Objek/array JavaScript dari response.json() masuk lewat data.
+    // Menyusun komponen card artikel secara dinamis
+    const obj1 = data["standings"][0];
+
+    
+    let i = 0;
+    var full_table_HTML = `<h3>LaLiga Table </h3>
+                            <br>
+                            <table class="responsive-table centered">
+                              <thead>
+                                <tr>
+                                  <th>Position</th>
+                                  <th>Club Name</th>
+                                  <th>Played Games</th>
+                                  <th>Win</th>
+                                  <th>Draw</th>
+                                  <th>Lost</th>
+                                  <th>Point/s</th>
+                                </tr>
+                              </thead>
+                              <tbody>`;
+    for (let iter_1 in obj1){
+      if ( i == 3){
+
+        for(var j = 0; j < obj1[iter_1].length ; j++){
+
+          const name = obj1[iter_1][j]["team"]["name"];
+          const points = obj1[iter_1][j]["points"];
+          const playedGames = obj1[iter_1][j]["playedGames"];
+          const won = obj1[iter_1][j]["won"];
+          const draw = obj1[iter_1][j]["draw"];
+          const lost = obj1[iter_1][j]["lost"];
+
+          full_table_HTML += `<tr>
+                                <td>${j+1}</td>
+                                <td>${name}</td>
+                                <td>${playedGames}</td>
+                                <td>${won}</td>
+                                <td>${draw}</td>
+                                <td>${lost}</td>
+                                <td>${points}</td>
+                                
+                              </tr>`;
+        }
+        
+      }
+      
+      i++;
+    }
+    
+    full_table_HTML += `</tbody>    
+                      </table>`;
+
+    document.getElementById("body-content").innerHTML = full_table_HTML; 
+  })
+  .catch(error);
+
+}
+
+
+
+const getLeagueStandingsById = () => {
+
+  var urlParams = new URLSearchParams(window.location.search);
+  var idParam = urlParams.get("id");
+  console.log("Parameter id : "+ idParam);
+
+   if (idParam  == "2021"){
+    getEPLStandings(); 
+
+   }else if (idParam  == "2014") {
+
+    getLaLigaStandings();
+
+   }
+
+}

@@ -35,7 +35,7 @@
             <div class="nav wrapper">
                 <div class="container">
                     <a href="" class="brand-logo center"> RumahBola </a>
-                    <a href="#" data-target="slide-out" class="sidenav-trigger  show-on-large"><i class="material-icons">menu</i></a>
+                    <a href="./index.html" class="sidenav-trigger  show-on-large"><i class="material-icons">arrow_back</i></a>
                     
                     <ul class="right hide-on-small-and-down collection" style="margin:0px; border:0px solid transparent">
                         <li class="collection-item avatar" style="background: transparent;">
@@ -49,29 +49,7 @@
         <!---- #END NAVIGATION BAR -->
         
         
-        <ul id="slide-out" class="sidenav">
-            <li>
-              <div class="user-view">
-                <div class="background" style="background: #04052e;">
-                  <!--img src="assets/img/logo.png"-->
-                </div>
-                <a href="#"><img class="circle"
-                    src="/assets/img/my-picture.png"></a>
-                <a href="#"><span class="white-text name">Satya Pratama Kadranyata</span></a>
-                <a href="#"><span class="white-text email">satya0906@gmail.com</span></a>
-              </div>
-            </li>
-            <li style="color: #04052e;"><a href="#dashboard"><i class="material-icons" style="color: #04052e;">dashboard</i>DASHBOARD</a></li>
-            <li style="color: #04052e;"><a href="#table"><i class="material-icons" style="color: #04052e;">star</i>COMPETITION</a>
-                              
-            </li>
-            
-            <li>
-              <div class="divider"></div>
-            </li>
-            <!--li><a class="subheader">Ini Sub header</a></li-->
-            <li><a class="waves-effect" href="#">FAVOURITE TEAM</a></li>
-        </ul>
+        
 
         <div class="main" id="body-content">
 
@@ -106,12 +84,10 @@
 
             $(document).ready( () => {              
                 
-                $('.sidenav').sidenav();
+                /*$('.sidenav').sidenav();
                 $('.collapsible').collapsible();
 
                 var page = window.location.hash.substr(1);
-                if (page == "") page = "dashboard";
-                
                 
                 $("#body-content").load( "pages/" + page + ".html");
 
@@ -125,7 +101,8 @@
                     page = event.target.getAttribute("href").substr(1);
                     $("#body-content").load( "pages/" + page + ".html");
                 });
-                getAllTopLeaguesStandings();
+                getAllLeaguesStandings();*/
+                getLeagueStandingsById();
                            
             });
         </script>
