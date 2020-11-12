@@ -239,13 +239,12 @@ const getTopLaLigaStandings = () => {
         })
       }
     })
-  }
-
+  } 
 
   fetch(urlLaLigaStandings, {
-      headers: {
-          'X-Auth-Token' : '0e42cd9c1953405f81134678fb75b5dd'
-      }
+    headers: {
+        'X-Auth-Token' : '0e42cd9c1953405f81134678fb75b5dd'
+    }
   })
     .then(status)
     .then(json)
@@ -282,7 +281,10 @@ const getTopLaLigaStandings = () => {
       }               
     })
     .catch(error);
-}
+  }
+
+
+  
 
 /*
 // Blok kode untuk melakukan request data json
@@ -343,260 +345,285 @@ const getAllTopLeaguesStandings = () => {
 
 const getEPLStandings = () => {
 
-  if ('caches' in window) {
-    caches.match(urlEPLStandings).then( (response) => {
+  return new Promise((resolve, reject) => {
+    if ('caches' in window) {
+      caches.match(urlEPLStandings).then( (response) => {
+  
+        if (response) {
+          response.json().then( (data) => {
+            // Objek/array JavaScript dari response.json() masuk lewat data.
+            // Menyusun komponen card artikel secara dinamis
+            const obj1 = data["standings"][0];    
+            let i = 0;
+            var full_table_HTML = `<h3>EPL Table </h3>
+                                    <br>
+                                    <table class="responsive-table centered">
+                                      <thead>
+                                        <tr>
+                                          <th>Position</th>
+                                          <th>Club Name</th>
+                                          <th>Played Games</th>
+                                          <th>Win</th>
+                                          <th>Draw</th>
+                                          <th>Lost</th>
+                                          <th>Point/s</th>
+                                          <th>Favorite Team</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>`;
+  
+            for (let iter_1 in obj1){
+              if ( i == 3){      
+                for(var j = 0; j < obj1[iter_1].length ; j++){      
+                  const name = obj1[iter_1][j]["team"]["name"];
+                  const id = obj1[iter_1][j]["team"]["id"];
+                  const points = obj1[iter_1][j]["points"];
+                  const playedGames = obj1[iter_1][j]["playedGames"];
+                  const won = obj1[iter_1][j]["won"];
+                  const draw = obj1[iter_1][j]["draw"];
+                  const lost = obj1[iter_1][j]["lost"];
+        
+                  full_table_HTML += `<tr>
+                                        <td>${j+1}</td>
+                                        <td>${name}</td>
+                                        <td>${playedGames}</td>
+                                        <td>${won}</td>
+                                        <td>${draw}</td>
+                                        <td>${lost}</td>
+                                        <td>${points}</td>
+                                        <td> <a class="waves-effect waves-light btn" onclick="saveFavoTeam(${obj1[iter_1]})"> SAVE<a></td>
+                                      </tr>`;
+                }                
+              }              
+              i++;
+            }            
+            full_table_HTML += `</tbody>    
+                              </table>`;
+        
+            document.getElementById("body-content").innerHTML = full_table_HTML; 
+            resolve(data);
+          })
+        }
+      })
+    }
 
-      if (response) {
-        response.json().then( (data) => {
-          // Objek/array JavaScript dari response.json() masuk lewat data.
-          // Menyusun komponen card artikel secara dinamis
-          const obj1 = data["standings"][0];    
-          let i = 0;
-          var full_table_HTML = `<h3>EPL Table </h3>
-                                  <br>
-                                  <table class="responsive-table centered">
-                                    <thead>
-                                      <tr>
-                                        <th>Position</th>
-                                        <th>Club Name</th>
-                                        <th>Played Games</th>
-                                        <th>Win</th>
-                                        <th>Draw</th>
-                                        <th>Lost</th>
-                                        <th>Point/s</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>`;
-          for (let iter_1 in obj1){
-            if ( i == 3){
-      
-              for(var j = 0; j < obj1[iter_1].length ; j++){
-      
-                const name = obj1[iter_1][j]["team"]["name"];
-                const points = obj1[iter_1][j]["points"];
-                const playedGames = obj1[iter_1][j]["playedGames"];
-                const won = obj1[iter_1][j]["won"];
-                const draw = obj1[iter_1][j]["draw"];
-                const lost = obj1[iter_1][j]["lost"];
-      
-                full_table_HTML += `<tr>
-                                      <td>${j+1}</td>
-                                      <td>${name}</td>
-                                      <td>${playedGames}</td>
-                                      <td>${won}</td>
-                                      <td>${draw}</td>
-                                      <td>${lost}</td>
-                                      <td>${points}</td>
-                                      
-                                    </tr>`;
-              }
-              
-            }
-            
-            i++;
-          }
-          
-          full_table_HTML += `</tbody>    
-                            </table>`;
-      
-          document.getElementById("body-content").innerHTML = full_table_HTML; 
-        })
+    fetch(urlEPLStandings, {
+      headers: {
+          'X-Auth-Token' : '0e42cd9c1953405f81134678fb75b5dd'
       }
     })
-  }
-
-  fetch(urlEPLStandings, {
-    headers: {
-        'X-Auth-Token' : '0e42cd9c1953405f81134678fb75b5dd'
-    }
-  })
-  .then(status)
-  .then(json)
-  .then( (data) => {
-    // Objek/array JavaScript dari response.json() masuk lewat data.
-    // Menyusun komponen card artikel secara dinamis
-    const obj1 = data["standings"][0];    
-    let i = 0;
-    var full_table_HTML = `<h3>EPL Table </h3>
-                            <br>
-                            <table class="responsive-table centered">
-                              <thead>
-                                <tr>
-                                  <th>Position</th>
-                                  <th>Club Name</th>
-                                  <th>Played Games</th>
-                                  <th>Win</th>
-                                  <th>Draw</th>
-                                  <th>Lost</th>
-                                  <th>Point/s</th>
-                                </tr>
-                              </thead>
-                              <tbody>`;
-    for (let iter_1 in obj1){
-      if ( i == 3){
-
-        for(var j = 0; j < obj1[iter_1].length ; j++){
-
-          const name = obj1[iter_1][j]["team"]["name"];
-          const points = obj1[iter_1][j]["points"];
-          const playedGames = obj1[iter_1][j]["playedGames"];
-          const won = obj1[iter_1][j]["won"];
-          const draw = obj1[iter_1][j]["draw"];
-          const lost = obj1[iter_1][j]["lost"];
-
-          full_table_HTML += `<tr>
-                                <td>${j+1}</td>
-                                <td>${name}</td>
-                                <td>${playedGames}</td>
-                                <td>${won}</td>
-                                <td>${draw}</td>
-                                <td>${lost}</td>
-                                <td>${points}</td>
-                                
-                              </tr>`;
-        }
-        
+    .then(status)
+    .then(json)
+    .then( (data) => {
+      // Objek/array JavaScript dari response.json() masuk lewat data.
+      // Menyusun komponen card artikel secara dinamis
+      const obj1 = data["standings"][0];    
+      let i = 0;
+      var full_table_HTML = `<h3>EPL Table </h3>
+                              <br>
+                              <table class="responsive-table centered">
+                                <thead>
+                                  <tr>
+                                    <th>Position</th>
+                                    <th>Club Name</th>
+                                    <th>Played Games</th>
+                                    <th>Win</th>
+                                    <th>Draw</th>
+                                    <th>Lost</th>
+                                    <th>Point/s</th>
+                                    <th>Favorite Team</th>
+                                  </tr>
+                                </thead>
+                                <tbody>`;
+      for (let iter_1 in obj1){
+        if ( i == 3){
+          for(var j = 0; j < obj1[iter_1].length ; j++){
+            const name = obj1[iter_1][j]["team"]["name"];
+            const id = obj1[iter_1][j]["team"]["id"];
+            const points = obj1[iter_1][j]["points"];
+            const playedGames = obj1[iter_1][j]["playedGames"];
+            const won = obj1[iter_1][j]["won"];
+            const draw = obj1[iter_1][j]["draw"];
+            const lost = obj1[iter_1][j]["lost"];
+            full_table_HTML += `<tr>
+                                  <td>${j+1}</td>
+                                  <td>${name}</td>
+                                  <td>${playedGames}</td>
+                                  <td>${won}</td>
+                                  <td>${draw}</td>
+                                  <td>${lost}</td>
+                                  <td>${points}</td>
+                                  <td> <a class="waves-effect waves-light btn" onclick="saveFavoTeam(${obj1[iter_1]})"> SAVE<a></td>
+                                </tr>`;
+          }        
+        }      
+        i++;
       }
       
-      i++;
-    }
-    
-    full_table_HTML += `</tbody>    
-                      </table>`;
+      full_table_HTML += `</tbody>    
+                        </table>`;
+  
+      document.getElementById("body-content").innerHTML = full_table_HTML; 
+      resolve(data);
+    })
+    .catch(error);
 
-    document.getElementById("body-content").innerHTML = full_table_HTML; 
-  })
-  .catch(error);
+  });  
 }
+
 
 const getLaLigaStandings = () => {
 
-  if ('caches' in window) {
-    caches.match(urlLaLigaStandings).then( (response) => {
-
-      if (response) {
-        response.json().then( (data) => {
-          // Objek/array JavaScript dari response.json() masuk lewat data.
-          // Menyusun komponen card artikel secara dinamis
-          const obj1 = data["standings"][0];    
-          let i = 0;
-          var full_table_HTML = `<h3>LaLiga Table </h3>
-                                  <br>
-                                  <table class="responsive-table centered">
-                                    <thead>
-                                      <tr>
-                                        <th>Position</th>
-                                        <th>Club Name</th>
-                                        <th>Played Games</th>
-                                        <th>Win</th>
-                                        <th>Draw</th>
-                                        <th>Lost</th>
-                                        <th>Point/s</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>`;
-          for (let iter_1 in obj1){
-            if ( i == 3){
-      
-              for(var j = 0; j < obj1[iter_1].length ; j++){
-      
-                const name = obj1[iter_1][j]["team"]["name"];
-                const points = obj1[iter_1][j]["points"];
-                const playedGames = obj1[iter_1][j]["playedGames"];
-                const won = obj1[iter_1][j]["won"];
-                const draw = obj1[iter_1][j]["draw"];
-                const lost = obj1[iter_1][j]["lost"];
-      
-                full_table_HTML += `<tr>
-                                      <td>${j+1}</td>
-                                      <td>${name}</td>
-                                      <td>${playedGames}</td>
-                                      <td>${won}</td>
-                                      <td>${draw}</td>
-                                      <td>${lost}</td>
-                                      <td>${points}</td>
-                                      
-                                    </tr>`;
+  return new Promise((resolve, reject) => {
+    if ('caches' in window) {
+      caches.match(urlLaLigaStandings).then( (response) => {
+  
+        if (response) {
+          response.json().then( (data) => {
+            // Objek/array JavaScript dari response.json() masuk lewat data.
+            // Menyusun komponen card artikel secara dinamis
+            const obj1 = data["standings"][0];    
+            let i = 0;
+            var full_table_HTML = `<h3>LaLiga Table </h3>
+                                    <br>
+                                    <table class="responsive-table centered">
+                                      <thead>
+                                        <tr>
+                                          <th>Position</th>
+                                          <th>Club Name</th>
+                                          <th>Played Games</th>
+                                          <th>Win</th>
+                                          <th>Draw</th>
+                                          <th>Lost</th>
+                                          <th>Point/s</th>
+                                          <th>Favorite Team</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>`;
+            for (let iter_1 in obj1){
+              if ( i == 3){
+        
+                for(var j = 0; j < obj1[iter_1].length ; j++){
+        
+                  const name = obj1[iter_1][j]["team"]["name"];
+                  const points = obj1[iter_1][j]["points"];
+                  const playedGames = obj1[iter_1][j]["playedGames"];
+                  const id = obj1[iter_1][j]["team"]["id"];
+                  const won = obj1[iter_1][j]["won"];
+                  const draw = obj1[iter_1][j]["draw"];
+                  const lost = obj1[iter_1][j]["lost"];
+        
+                  full_table_HTML += `<tr>
+                                        <td>${j+1}</td>
+                                        <td>${name}</td>
+                                        <td>${playedGames}</td>
+                                        <td>${won}</td>
+                                        <td>${draw}</td>
+                                        <td>${lost}</td>
+                                        <td>${points}</td>
+                                        <td> <a class="waves-effect waves-light btn" onclick="saveFavoTeam(${obj1[iter_1]})"> SAVE<a></td>
+                                                                        
+                                      </tr>`;
+                }
+                
               }
               
+              i++;
             }
             
-            i++;
-          }
-          
-          full_table_HTML += `</tbody>    
-                            </table>`;
-      
-          document.getElementById("body-content").innerHTML = full_table_HTML; 
-        })
+            full_table_HTML += `</tbody>    
+                              </table>`;
+        
+            document.getElementById("body-content").innerHTML = full_table_HTML; 
+            resolve(data);
+          })
+        }
+      })
+    }
+
+    fetch(urlLaLigaStandings, {
+      headers: {
+          'X-Auth-Token' : '0e42cd9c1953405f81134678fb75b5dd'
       }
     })
-  }
-
-  fetch(urlLaLigaStandings, {
-    headers: {
-        'X-Auth-Token' : '0e42cd9c1953405f81134678fb75b5dd'
-    }
-  })
-  .then(status)
-  .then(json)
-  .then( (data) => {
-    // Objek/array JavaScript dari response.json() masuk lewat data.
-    // Menyusun komponen card artikel secara dinamis
-    const obj1 = data["standings"][0];
-
-    
-    let i = 0;
-    var full_table_HTML = `<h3>LaLiga Table </h3>
-                            <br>
-                            <table class="responsive-table centered">
-                              <thead>
-                                <tr>
-                                  <th>Position</th>
-                                  <th>Club Name</th>
-                                  <th>Played Games</th>
-                                  <th>Win</th>
-                                  <th>Draw</th>
-                                  <th>Lost</th>
-                                  <th>Point/s</th>
-                                </tr>
-                              </thead>
-                              <tbody>`;
-    for (let iter_1 in obj1){
-      if ( i == 3){
-
-        for(var j = 0; j < obj1[iter_1].length ; j++){
-
-          const name = obj1[iter_1][j]["team"]["name"];
-          const points = obj1[iter_1][j]["points"];
-          const playedGames = obj1[iter_1][j]["playedGames"];
-          const won = obj1[iter_1][j]["won"];
-          const draw = obj1[iter_1][j]["draw"];
-          const lost = obj1[iter_1][j]["lost"];
-
-          full_table_HTML += `<tr>
-                                <td>${j+1}</td>
-                                <td>${name}</td>
-                                <td>${playedGames}</td>
-                                <td>${won}</td>
-                                <td>${draw}</td>
-                                <td>${lost}</td>
-                                <td>${points}</td>
-                                
-                              </tr>`;
+    .then(status)
+    .then(json)
+    .then( (data) => {
+      // Objek/array JavaScript dari response.json() masuk lewat data.
+      // Menyusun komponen card artikel secara dinamis
+      const obj1 = data["standings"][0];
+  
+      
+      let i = 0;
+      var full_table_HTML = `<h3>LaLiga Table </h3>
+                              <br>
+                              <table class="responsive-table centered">
+                                <thead>
+                                  <tr>
+                                    <th>Position</th>
+                                    <th>Club Name</th>
+                                    <th>Played Games</th>
+                                    <th>Win</th>
+                                    <th>Draw</th>
+                                    <th>Lost</th>
+                                    <th>Point/s</th>
+                                    <th>Favorite Team</th>
+                                  </tr>
+                                </thead>
+                                <tbody>`;
+      for (let iter_1 in obj1){
+        if ( i == 3){
+  
+          for(var j = 0; j < obj1[iter_1].length ; j++){
+  
+            const name = obj1[iter_1][j]["team"]["name"];
+            const points = obj1[iter_1][j]["points"];
+            const playedGames = obj1[iter_1][j]["playedGames"];
+            const won = obj1[iter_1][j]["won"];
+            const draw = obj1[iter_1][j]["draw"];
+            const lost = obj1[iter_1][j]["lost"];
+            const id = obj1[iter_1][j]["team"]["id"];
+  
+            full_table_HTML += `<tr>
+                                  <td>${j+1}</td>
+                                  <td>${name}</td>
+                                  <td>${playedGames}</td>
+                                  <td>${won}</td>
+                                  <td>${draw}</td>
+                                  <td>${lost}</td>
+                                  <td>${points}</td>
+                                  <td> <a class="waves-effect waves-light btn" onclick="saveFavoTeam(${obj1[iter_1]})">SAVE</a> </td>
+                                                               
+                                </tr>`;
+          }
+          
         }
         
+        i++;
       }
       
-      i++;
-    }
-    
-    full_table_HTML += `</tbody>    
-                      </table>`;
+      full_table_HTML += `</tbody>    
+                        </table>`;
+  
+      document.getElementById("body-content").innerHTML = full_table_HTML; 
+      resolve(data);
+    })
+    .catch(error);
 
-    document.getElementById("body-content").innerHTML = full_table_HTML; 
-  })
-  .catch(error);
+  });
+
+  
+
+  
+
+}
+
+const saveFavoTeam = (data) => {
+
+  //console.log(id);
+  const toastHTML = `<span>Tim berhasil disimpan </span><button class="btn-flat toast-action">Undo</button>`;
+  //console.log(data);
+  M.toast({html: toastHTML});
 
 }
 
